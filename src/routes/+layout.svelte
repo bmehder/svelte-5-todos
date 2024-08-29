@@ -4,7 +4,7 @@
 
 <main>
 	<div class="dvh-100 gradient-8">
-		<div class="boxed flow py-2">
+		<div class="boxed flow py-4">
 			<slot><!-- optional fallback --></slot>
 		</div>
 	</div>

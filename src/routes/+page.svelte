@@ -1,5 +1,6 @@
 <script>
 	import { slide } from 'svelte/transition'
+
 	const FILTERS = ['All', 'Completed', 'Remaining']
 
 	const filterTodos = x =>
@@ -30,13 +31,6 @@
 		todos[index].text = inputEl.value
 	}
 
-	const toggleDone = evt => {
-		const inputEl = evt.target
-		const index = +inputEl.dataset.index
-
-		todos[index].done = !todos[index].done
-	}
-
 	const deleteTodo = evt => {
 		if (confirm('You sure?')) {
 			const inputEl = evt.target
@@ -44,6 +38,13 @@
 
 			todos = todos.filter((_, i) => i !== index)
 		}
+	}
+
+	const toggleDone = evt => {
+		const inputEl = evt.target
+		const index = +inputEl.dataset.index
+
+		todos[index].done = !todos[index].done
 	}
 
 	// State
@@ -74,14 +75,9 @@
 <div
 	class="fit-content mx-auto grid place-content-center gap-2 p-2 border-1 radius-2 gray-0"
 >
-	<div class="h2 text-center">Svelte 5 Todo List</div>
+	<div class="text-center h2">Svelte 5 Todo List</div>
 
-	<input
-		class="p-0-5"
-		type="text"
-		onkeydown={addTodo}
-		placeholder="Add new todo..."
-	/>
+	<input class="p-0-5" onkeydown={addTodo} placeholder="Add new todo..." />
 
 	<div class="flex gap-1">
 		{#each FILTERS as _filter}
