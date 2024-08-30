@@ -2,13 +2,21 @@ export default () => {
 	const FILTERS = ['All', 'Completed', 'Remaining']
 
 	let list = $state({
-		value: [
-			{ text: 'Todo 1', isDone: false },
-			{ text: 'Todo 2', isDone: true },
-		],
+		value: [],
 	})
 
 	let filter = $state({ value: 'All' })
+
+	// Side Effects
+	$effect(() => {
+		const savedTodos = window.localStorage.getItem('svelte-5-todos-2')
+
+		savedTodos && (list.value = JSON.parse(savedTodos))
+	})
+
+	$effect(() => {
+		localStorage.setItem('svelte-5-todos-2', JSON.stringify(list.value))
+	})
 
 	return {
 		FILTERS,

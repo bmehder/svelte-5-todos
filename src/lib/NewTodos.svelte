@@ -4,17 +4,6 @@
 
 	const todos = Todos()
 
-	// Side Effects
-	$effect(() => {
-		const savedTodos = window.localStorage.getItem('svelte-5-todos-2')
-
-		savedTodos && (todos.list.value = JSON.parse(savedTodos))
-	})
-
-	$effect(() => {
-		localStorage.setItem('svelte-5-todos-2', JSON.stringify(todos.list.value))
-	})
-
 	$inspect(todos.list.value)
 	$inspect(todos.filter.value)
 </script>
