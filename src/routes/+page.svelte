@@ -1,8 +1,15 @@
 <script>
 	import Todos from '$lib/Todos.svelte'
+	import NewTodos from '$lib/NewTodos.svelte'
 </script>
 
-<Todos />
+<section>
+	<NewTodos />
+</section>
+
+<section>
+	<Todos />
+</section>
 
 <section>
 	<div class="boxed flow py-2">
@@ -37,7 +44,7 @@
 	img {
 		float: right;
 		width: 50vw;
-		max-width: 400px;
+		max-width: var(--sm);
 		shape-outside: url(/woman.png);
 		shape-margin: 1rem;
 	}

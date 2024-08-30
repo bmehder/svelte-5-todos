@@ -69,8 +69,8 @@
 	})
 
 	// Logs
-	$inspect(todos)
-	$inspect(filter)
+	// $inspect(todos)
+	// $inspect(filter)
 </script>
 
 <div
