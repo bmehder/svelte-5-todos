@@ -80,7 +80,7 @@
 
 	<input class="p-0-5" onkeydown={addTodo} placeholder="Add new todo..." />
 
-	<div class="flex gap-1">
+	<div class="flex flex-wrap gap-1">
 		{#each FILTERS as option}
 			<button
 				class="bg-lime-4 gray-12 radius-1"

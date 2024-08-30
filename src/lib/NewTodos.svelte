@@ -15,16 +15,6 @@
 
 	<input class="p-0-5" onkeydown={todos.addTodo} placeholder="Add new todo..." />
 
-	<div class="flex gap-1">
-		{#each todos.FILTERS as option}
-			<button
-				class="bg-lime-4 gray-12 radius-1"
-				class:bg-lime-6={todos.filter.value === option}
-				onclick={() => todos.setFilter(option)}>{option}</button
-			>
-		{/each}
-	</div>
-
 	<ul>
 		{#each todos.filterTodos(todos.filter.value) as todo, i (todo)}
 			<li
@@ -54,6 +44,16 @@
 			</li>
 		{/each}
 	</ul>
+
+	<div class="flex flex-wrap gap-1">
+		{#each todos.FILTERS as option}
+			<button
+				class="bg-lime-4 gray-12 radius-1"
+				class:bg-lime-6={todos.filter.value === option}
+				onclick={() => todos.setFilter(option)}>{option}</button
+			>
+		{/each}
+	</div>
 
 	<div class="text-center h4">{todos.remaining()} remaining</div>
 </div>
