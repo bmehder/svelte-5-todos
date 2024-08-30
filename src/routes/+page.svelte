@@ -1,12 +1,11 @@
 <script>
 	import Todos from '$lib/Todos.svelte'
-	import NewTodos from '$lib/NewTodos.svelte'
 </script>
 
 <section>
 	<div class="auto-fill align-items-start gap-2" style="--min: 20rem;">
+		<Todos saveAs="todo-list-3" />
 		<Todos />
-		<NewTodos />
 	</div>
 </section>
 

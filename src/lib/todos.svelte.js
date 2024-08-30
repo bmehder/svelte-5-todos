@@ -1,4 +1,4 @@
-export default () => {
+export default localStorageName => {
 	const FILTERS = ['All', 'Completed', 'Remaining']
 
 	let list = $state({
@@ -9,27 +9,29 @@ export default () => {
 
 	// Side Effects
 	$effect(() => {
-		const savedTodos = window.localStorage.getItem('svelte-5-todos-2')
+		const savedTodos = window.localStorage.getItem(localStorageName) ?? false
 
 		savedTodos && (list.value = JSON.parse(savedTodos))
 	})
 
 	$effect(() => {
-		localStorage.setItem('svelte-5-todos-2', JSON.stringify(list.value))
+		localStorageName &&
+			localStorage.setItem(localStorageName, JSON.stringify(list.value))
 	})
 
 	return {
-		FILTERS,
 		list,
+		FILTERS,
 		filter,
 		addTodo: evt => {
-			if (evt.key !== 'Enter') return
+			evt.preventDefault()
 
-			const todoEl = evt.target
-			const text = todoEl.value
+			const text = new FormData(evt.target).get('text')
 
-			list.value.push({ text, isDone: false })
-			todoEl.value = ''
+			Boolean(text) && list.value.push({ text, isDone: false })
+
+			evt.target.reset()
+			evt.target.querySelector('input').focus()
 		},
 		editTodo: evt => {
 			const inputEl = evt.target
@@ -43,7 +45,6 @@ export default () => {
 				const index = +inputEl.dataset.index
 
 				list.value = list.value.filter((_, i) => i !== index)
-				console.log(list)
 			}
 		},
 		toggleIsDone: evt => {
@@ -52,6 +53,7 @@ export default () => {
 
 			list.value[index].isDone = !list.value[index].isDone
 		},
+		remaining: () => list.value.filter(({ isDone }) => !isDone).length,
 		setFilter: option => {
 			filter.value = option
 		},
@@ -61,6 +63,5 @@ export default () => {
 				['Completed', list.value.filter(({ isDone }) => !!isDone)],
 				['Remaining', list.value.filter(({ isDone }) => !isDone)],
 			]).get(option),
-		remaining: () => list.value.filter(({ isDone }) => !isDone).length,
 	}
 }
