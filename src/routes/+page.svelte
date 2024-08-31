@@ -5,7 +5,7 @@
 <section>
 	<div class="boxed py-2">
 		<div class="auto-fill align-items-start gap-2" style="--min: 20rem;">
-			<Todos saveAs="todo-list-3" />
+			<Todos name="List One" saveAs="todo-list-3" />
 			<Todos />
 		</div>
 	</div>
