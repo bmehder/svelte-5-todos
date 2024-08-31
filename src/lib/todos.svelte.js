@@ -7,7 +7,7 @@ export default localStorageName => {
 
 	// Side Effects
 	$effect(() => {
-		const savedTodos = window.localStorage.getItem(localStorageName) ?? null
+		const savedTodos = window.localStorage.getItem(localStorageName)
 
 		savedTodos && (list.value = JSON.parse(savedTodos))
 	})
@@ -31,25 +31,16 @@ export default localStorageName => {
 			evt.target.reset()
 			evt.target.querySelector('input').focus()
 		},
-		editTodo: evt => {
-			const inputEl = evt.target
-			const index = +inputEl.dataset.index
-
-			list.value[index].text = inputEl.value
+		editTodo: (idx, value) => {
+			list.value[idx].text = value
 		},
-		deleteTodo: evt => {
+		deleteTodo: idx => {
 			if (confirm('Are you sure you want to delete this todo?')) {
-				const inputEl = evt.target
-				const index = +inputEl.dataset.index
-
-				list.value = list.value.filter((_, i) => i !== index)
+				list.value = list.value.filter((_, i) => i !== idx)
 			}
 		},
-		toggleIsDone: evt => {
-			const inputEl = evt.target
-			const index = +inputEl.dataset.index
-
-			list.value[index].isDone = !list.value[index].isDone
+		toggleIsDone: idx => {
+			list.value[idx].isDone = !list.value[idx].isDone
 		},
 		remaining: () => list.value.filter(({ isDone }) => !isDone).length,
 		setFilter: option => {

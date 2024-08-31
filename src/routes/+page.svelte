@@ -50,15 +50,6 @@
 			nam quasi dolor vero minus minima ratione. Repellendus modi pariatur,
 			dignissimos, harum iure totam labore, neque libero error ut illum a.
 		</p>
-		<p>
-			Delectus sed ducimus, facere asperiores fuga modi nulla velit distinctio
-			repellat possimus error saepe repellendus aut odio veniam quibusdam nihil quo
-			quasi aliquid consequuntur. Minima assumenda quam, sunt commodi quae, ea
-			voluptas minus aperiam id delectus blanditiis repellat a dolor doloremque dicta
-			consectetur explicabo unde mollitia facilis! Iusto voluptatem adipisci mollitia
-			blanditiis similique distinctio. Tempore maiores neque, accusantium molestias
-			enim reprehenderit.
-		</p>
 	</div>
 </section>
 
