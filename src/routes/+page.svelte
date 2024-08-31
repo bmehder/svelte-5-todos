@@ -3,14 +3,16 @@
 </script>
 
 <section>
-	<div class="auto-fill align-items-start gap-2" style="--min: 20rem;">
-		<Todos saveAs="todo-list-3" />
-		<Todos />
+	<div class="boxed py-2">
+		<div class="auto-fill align-items-start gap-2" style="--min: 20rem;">
+			<Todos saveAs="todo-list-3" />
+			<Todos />
+		</div>
 	</div>
 </section>
 
 <section>
-	<div class="boxed flow py-2">
+	<div class="boxed flow py-2" style="max-width: 65ch;">
 		<h2>CSS - Shape Outside</h2>
 		<div class="flow">
 			<div class="shape" role="img"></div>
@@ -41,21 +43,21 @@
 			Maiores nesciunt magni ullam assumenda ipsa, quas earum? Illo exercitationem
 			distinctio cumque commodi nemo in quia omnis consequatur sed aliquam dolor
 			repellendus sapiente culpa hic ut quae doloribus perspiciatis quaerat
-			temporibus, numquam excepturi.
+			temporibus, numquam excepturi. Nam voluptate earum soluta sed itaque veniam
+			provident illo repellendus inventore dicta esse asperiores delectus quisquam
+			fugiat ipsam incidunt accusamus eveniet quasi, quas quis quod aspernatur ipsa,
+			tempore fuga. Sequi, magnam, hic animi dolore eligendi natus quas cupiditate
+			nam quasi dolor vero minus minima ratione. Repellendus modi pariatur,
+			dignissimos, harum iure totam labore, neque libero error ut illum a.
 		</p>
 		<p>
-			Nam voluptate earum soluta sed itaque veniam provident illo repellendus
-			inventore dicta esse asperiores delectus quisquam fugiat ipsam incidunt
-			accusamus eveniet quasi, quas quis quod aspernatur ipsa, tempore fuga. Sequi,
-			magnam, hic animi dolore eligendi natus quas cupiditate nam quasi dolor vero
-			minus minima ratione. Repellendus modi pariatur, dignissimos, harum iure totam
-			labore, neque libero error ut illum a. Delectus sed ducimus, facere asperiores
-			fuga modi nulla velit distinctio repellat possimus error saepe repellendus aut
-			odio veniam quibusdam nihil quo quasi aliquid consequuntur. Minima assumenda
-			quam, sunt commodi quae, ea voluptas minus aperiam id delectus blanditiis
-			repellat a dolor doloremque dicta consectetur explicabo unde mollitia facilis!
-			Iusto voluptatem adipisci mollitia blanditiis similique distinctio. Tempore
-			maiores neque, accusantium molestias enim reprehenderit.
+			Delectus sed ducimus, facere asperiores fuga modi nulla velit distinctio
+			repellat possimus error saepe repellendus aut odio veniam quibusdam nihil quo
+			quasi aliquid consequuntur. Minima assumenda quam, sunt commodi quae, ea
+			voluptas minus aperiam id delectus blanditiis repellat a dolor doloremque dicta
+			consectetur explicabo unde mollitia facilis! Iusto voluptatem adipisci mollitia
+			blanditiis similique distinctio. Tempore maiores neque, accusantium molestias
+			enim reprehenderit.
 		</p>
 	</div>
 </section>
@@ -77,9 +79,10 @@
 
 	.shape-img {
 		float: right;
-		width: 50vw;
+		width: 30vw;
 		max-width: var(--sm);
 		shape-outside: url(/woman.png);
 		shape-margin: 1rem;
+		margin-block-end: 1rem;
 	}
 </style>

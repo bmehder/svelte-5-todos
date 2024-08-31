@@ -6,19 +6,19 @@
 	const { saveAs } = $props()
 
 	const todos = Todos(saveAs)
-
-	$inspect(todos.list.value)
-	$inspect(todos.filter.value)
 </script>
 
-<div
-	class="fit-content mx-auto grid place-content-center gap-2 p-2 border-1 radius-2 bg-gray-11 gray-0"
->
+<div class="grid place-content-center gap-2 p-2 bg-gray-11 gray-0 border-1 radius-2">
 	<div class="text-center h2">Svelte 5 Todo List</div>
 
 	<form onsubmit={preventDefault(todos.addTodo)}>
 		<div class="flex">
-			<input class="p-0-5 full-width" name="text" placeholder="Add new todo..." />
+			<input
+				class="p-0-5 full-width"
+				name="text"
+				placeholder="Add new todo..."
+				required
+			/>
 			<button class="bg-lime-4 gray-12 h2">+</button>
 		</div>
 	</form>

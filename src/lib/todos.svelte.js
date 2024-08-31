@@ -1,21 +1,19 @@
 export default localStorageName => {
 	const FILTERS = ['All', 'Completed', 'Remaining']
 
-	let list = $state({
-		value: [],
-	})
-
+	// State
+	let list = $state({ value: [] })
 	let filter = $state({ value: 'All' })
 
 	// Side Effects
 	$effect(() => {
-		const savedTodos = window.localStorage.getItem(localStorageName) ?? false
+		const savedTodos = window.localStorage.getItem(localStorageName) ?? null
 
 		savedTodos && (list.value = JSON.parse(savedTodos))
 	})
 
 	$effect(() => {
-		localStorageName &&
+		Boolean(localStorageName) &&
 			localStorage.setItem(localStorageName, JSON.stringify(list.value))
 	})
 
@@ -24,11 +22,11 @@ export default localStorageName => {
 		FILTERS,
 		filter,
 		addTodo: evt => {
-			evt.preventDefault()
+			const text = new FormData(evt.target).get('text').trim()
 
-			const text = new FormData(evt.target).get('text')
-
-			Boolean(text) && list.value.push({ text, isDone: false })
+			Boolean(text) &&
+				list.value.every(obj => obj.text !== text) &&
+				list.value.push({ text, isDone: false })
 
 			evt.target.reset()
 			evt.target.querySelector('input').focus()
