@@ -31,8 +31,8 @@ export default localStorageName => {
 			evt.target.reset()
 			evt.target.querySelector('input').focus()
 		},
-		editTodo: (idx, value) => {
-			list.value[idx].text = value
+		editTodo: (idx, text) => {
+			list.value[idx].text = text
 		},
 		deleteTodo: idx => {
 			if (confirm('Are you sure you want to delete this todo?')) {
