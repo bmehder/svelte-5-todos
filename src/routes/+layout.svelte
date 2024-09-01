@@ -1,6 +1,6 @@
-<svelte:head>
-	<link rel="stylesheet" href="https://bmehder.github.io/cheeky-css/cheeky.css" />
-</svelte:head>
+<script>
+	import '$lib/styles/cheeky.css'
+</script>
 
 <main>
 	<div class="dvh-100 gradient-8 gray-0">

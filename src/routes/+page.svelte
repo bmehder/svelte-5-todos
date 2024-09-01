@@ -65,7 +65,7 @@
 		margin-block: 0.5rem;
 		margin-inline: 2rem;
 		margin-inline-start: 0;
-		background-image: url('https://plus.unsplash.com/premium_photo-1682096467444-8861e1dc3bc2');
+		background-image: url('/woman.jpg');
 		background-position: center;
 		background-size: cover;
 		shape-outside: circle(50%);
@@ -76,7 +76,7 @@
 		float: right;
 		width: 30vw;
 		max-width: var(--sm);
-		shape-outside: url(/woman.png);
+		shape-outside: url('/woman.png');
 		shape-margin: 1rem;
 		margin-block-end: 1rem;
 	}
