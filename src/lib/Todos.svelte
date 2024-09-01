@@ -24,22 +24,22 @@
 			</div>
 		</form>
 
-		<menu class="flex flex-wrap gap-1">
+		<menu class="flex flex-wrap gap-0-2-5">
 			{#each todos.FILTERS as filter}
 				<li>
 					<button
-						class="bg-lime-4 hover-bg-gray-2 gray-12 radius-1"
-						class:bg-lime-6={todos.filterOption.value === filter}
-						onclick={() => (todos.filterOption.value = filter)}>{filter}</button
+						class="bg-lime-4 hover-bg-gray-2 gray-12"
+						class:bg-lime-6={todos.filter.value === filter}
+						onclick={() => (todos.filter.value = filter)}>{filter}</button
 					>
 				</li>
 			{/each}
 		</menu>
 
 		<ul>
-			{#each todos.filterTodos(todos.filterOption.value) as todo, idx (todo)}
+			{#each todos.filterTodos(todos.filter.value) as todo, idx (todo)}
 				<li
-					class="flex space-between gap-1 px-1 py-0-5 overlay-6 border-bottom-2"
+					class="flex space-between gap-1 py-0-5"
 					class:gray-6={todo.isDone}
 					transition:slide
 				>
@@ -55,17 +55,16 @@
 						oninput={evt => todos.edit(idx, evt.target.value)}
 						value={todo.text}
 					/>
-					<button
-						class="unset h2 lime-4 hover-red-4"
-						onclick={() => todos.delete(idx)}>X</button
+					<button class="unset h2 hover-red-4" onclick={() => todos.delete(idx)}
+						>X</button
 					>
 				</li>
 			{/each}
 		</ul>
 
-		{#if todos.filterOption.value === 'Completed'}
+		{#if todos.filter.value === 'Completed'}
 			<div class="h4">{todos.completed()} completed</div>
-		{:else if todos.filterOption.value === 'Remaining'}
+		{:else if todos.filter.value === 'Remaining'}
 			<div class="h4">{todos.remaining()} remaining</div>
 		{:else}
 			<div class="h4">{todos.totalCount()} items</div>

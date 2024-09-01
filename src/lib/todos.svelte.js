@@ -3,7 +3,7 @@ export default saveAs => {
 
 	// State
 	let list = $state({ value: [] })
-	let filterOption = $state({ value: 'All' })
+	let filter = $state({ value: 'All' })
 
 	// Side Effects
 	$effect(() => {
@@ -19,7 +19,7 @@ export default saveAs => {
 	return {
 		list,
 		FILTERS,
-		filterOption,
+		filter,
 		add: evt => {
 			const text = new FormData(evt.target).get('text').trim()
 
