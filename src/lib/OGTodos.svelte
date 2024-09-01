@@ -13,7 +13,7 @@
 		parseJSON,
 	} from 'nejquery'
 
-	const FILTERS = ['All', 'Completed', 'Remaining']
+	const FILTERS = Object.freeze(['All', 'Completed', 'Remaining'])
 
 	// Props
 	const { name = 'OG Todo List', saveAs = null } = $props()
