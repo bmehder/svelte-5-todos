@@ -130,7 +130,7 @@
 		{:else if filter === 'Remaining'}
 			<div class="h4">{remainingCount} remaining</div>
 		{:else}
-			<div class="h4">{todosCount} items</div>
+			<div class="h4">{todosCount} {todosCount === 1 ? 'item' : 'items'}</div>
 		{/if}
 	</div>
 </div>

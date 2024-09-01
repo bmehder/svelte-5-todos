@@ -67,7 +67,10 @@
 		{:else if todos.filter.value === 'Remaining'}
 			<div class="h4">{todos.remaining()} remaining</div>
 		{:else}
-			<div class="h4">{todos.totalCount()} items</div>
+			<div class="h4">
+				{todos.totalCount()}
+				{todos.totalCount() === 1 ? 'item' : 'items'}
+			</div>
 		{/if}
 	</div>
 </div>
