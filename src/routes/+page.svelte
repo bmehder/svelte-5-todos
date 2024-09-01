@@ -1,12 +1,16 @@
 <script>
 	import Todos from '$lib/Todos.svelte'
+	import OGTodos from '$lib/OGTodos.svelte'
 </script>
 
 <section>
 	<div class="boxed py-2">
 		<div class="auto-fill align-items-start gap-2" style="--min: 20rem;">
-			<Todos name="List One" saveAs="todo-list-3" />
-			<Todos />
+			<Todos name="List One Factory" saveAs="todo-list-1" />
+			<Todos name="List Two Factory" saveAs="todo-list-2" />
+			<OGTodos name="OG List One" saveAs="og-todos-1" />
+			<OGTodos name="OG List Two" saveAs="og-todos-2" />
+			<OGTodos name="OG List (No Save)" />
 		</div>
 	</div>
 </section>
