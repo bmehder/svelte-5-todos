@@ -1,55 +1,75 @@
 <script>
 	import { preventDefault } from '$lib/utils.js'
 	import { slide } from 'svelte/transition'
+	import {
+		pipe,
+		keep,
+		reject,
+		every,
+		pluck,
+		trim,
+		length,
+		stringify,
+		parseJSON,
+	} from 'nejquery'
 
 	const FILTERS = ['All', 'Completed', 'Remaining']
 
 	// Props
 	const { name = 'OG Todo List', saveAs = null } = $props()
 
+	// Partially applied functions
+	const isDone = pluck('isDone')
+	const keepIsDone = keep(isDone)
+	const rejectIsDone = reject(isDone)
+	const countCompleted = pipe(keepIsDone, length)
+	const countRemaining = pipe(rejectIsDone, length)
+
 	// State Mutations
 	const filterTodos = option =>
 		new Map([
 			['All', todos],
-			['Completed', todos.filter(({ isDone }) => !!isDone)],
-			['Remaining', todos.filter(({ isDone }) => !isDone)],
+			['Completed', keepIsDone(todos)],
+			['Remaining', rejectIsDone(todos)],
 		]).get(option)
 
+	// Event Handlers
 	const addTodo = evt => {
-		const text = new FormData(evt.target).get('text').trim()
+		const text = trim(new FormData(evt.target).get('text'))
+		const isTextNotIncluded = every(obj => obj.text !== text)
 
-		Boolean(text) &&
-			todos.every(obj => obj.text !== text) &&
-			todos.push({ text, isDone: false })
+		Boolean(text) && isTextNotIncluded(todos) && todos.push({ text, isDone: false })
 
 		evt.target.reset()
 		evt.target.querySelector('input').focus()
 	}
 
 	const deleteTodo = idx => {
+		const rejectTodoWithIndex = reject((_, i) => i === idx)
+
 		if (confirm('Are you sure you want to delete this todo?')) {
-			todos = todos.filter((_, i) => i !== idx)
+			todos = rejectTodoWithIndex(todos)
 		}
 	}
 
-	// State
+	// Explicit State
 	let todos = $state([])
 	let filter = $state('All')
 
-	const remaining = $derived(todos.filter(({ isDone }) => !isDone).length)
-	const completed = $derived(todos.filter(({ isDone }) => !!isDone).length)
-
-	const filteredTodos = $derived(filterTodos(filter))
+	// Implicit State
+	const completedCount = $derived(countCompleted(todos))
+	const remainingCount = $derived(countRemaining(todos))
+	const todosCount = $derived(length(todos))
 
 	// Side Effects
 	$effect(() => {
 		const savedTodos = window.localStorage.getItem(saveAs)
 
-		savedTodos && (todos = JSON.parse(savedTodos))
+		savedTodos && (todos = parseJSON(savedTodos))
 	})
 
 	$effect(() => {
-		Boolean(saveAs) && localStorage.setItem(saveAs, JSON.stringify(todos))
+		Boolean(saveAs) && localStorage.setItem(saveAs, stringify(todos))
 	})
 </script>
 
@@ -73,14 +93,16 @@
 					<button
 						class="bg-lime-4 hover-bg-gray-2 gray-12"
 						class:bg-lime-6={filter === _filter}
-						onclick={() => (filter = _filter)}>{_filter}</button
+						onclick={() => (filter = _filter)}
 					>
+						{_filter}
+					</button>
 				</li>
 			{/each}
 		</menu>
 
 		<ul>
-			{#each filteredTodos as todo, idx (todo)}
+			{#each filterTodos(filter) as todo, idx (todo)}
 				<li
 					class="flex space-between gap-1 py-0-5"
 					class:gray-6={todo.isDone}
@@ -104,11 +126,11 @@
 		</ul>
 
 		{#if filter === 'Completed'}
-			<div class="h4">{completed} completed</div>
+			<div class="h4">{completedCount} completed</div>
 		{:else if filter === 'Remaining'}
-			<div class="h4">{remaining} remaining</div>
+			<div class="h4">{remainingCount} remaining</div>
 		{:else}
-			<div class="h4">{todos.length} items</div>
+			<div class="h4">{todosCount} items</div>
 		{/if}
 	</div>
 </div>
