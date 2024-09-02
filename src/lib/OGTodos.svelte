@@ -1,11 +1,11 @@
 <script>
-	import { preventDefault } from '$lib/utils.js'
 	import { slide } from 'svelte/transition'
 	import {
 		pipe,
 		keep,
 		reject,
 		every,
+		push,
 		pluck,
 		trim,
 		length,
@@ -20,28 +20,28 @@
 
 	// Partially applied functions
 	const isDone = pluck('isDone')
-	const keepIsDone = keep(isDone)
-	const rejectIsDone = reject(isDone)
-	const countCompleted = pipe(keepIsDone, length)
-	const countRemaining = pipe(rejectIsDone, length)
+	const keepIsDones = keep(isDone)
+	const rejectIsDones = reject(isDone)
+	const countCompleted = pipe(keepIsDones, length)
+	const countRemaining = pipe(rejectIsDones, length)
 
-	// State Mutations
-	const filterTodos = option =>
-		new Map([
-			['All', todos],
-			['Completed', keepIsDone(todos)],
-			['Remaining', rejectIsDone(todos)],
-		]).get(option)
+	// DOM Fx
+	const resetInput = evt => {
+		evt.target.reset()
+		evt.target.firstChild.focus()
+	}
 
 	// Event Handlers
-	const addTodo = evt => {
+	const onsubmit = evt => {
+		evt.preventDefault()
+
 		const text = trim(new FormData(evt.target).get('text'))
-		const isTextNotIncluded = every(obj => obj.text !== text)
+		const isNotIncludesText = every(obj => obj.text !== text)
+		const pushNewTodo = push({ text, isDone: false })
 
-		Boolean(text) && isTextNotIncluded(todos) && todos.push({ text, isDone: false })
+		Boolean(text) && isNotIncludesText(todos) && (todos = pushNewTodo(todos))
 
-		evt.target.reset()
-		evt.target.querySelector('input').focus()
+		resetInput(evt)
 	}
 
 	const deleteTodo = idx => {
@@ -60,12 +60,19 @@
 	const completedCount = $derived(countCompleted(todos))
 	const remainingCount = $derived(countRemaining(todos))
 	const todosCount = $derived(length(todos))
+	const filteredTodos = $derived(
+		new Map([
+			['All', todos],
+			['Completed', keepIsDones(todos)],
+			['Remaining', rejectIsDones(todos)],
+		]).get(filter)
+	)
 
 	// Side Effects
 	$effect(() => {
 		const savedTodos = window.localStorage.getItem(saveAs)
 
-		savedTodos && (todos = parseJSON(savedTodos))
+		Boolean(savedTodos) && (todos = parseJSON(savedTodos))
 	})
 
 	$effect(() => {
@@ -77,7 +84,7 @@
 	<div class="grid place-content-center gap-1-5 p-2 text-center">
 		<div class="text-center h2">{name}</div>
 
-		<form class="flex" onsubmit={preventDefault(addTodo)}>
+		<form class="flex" {onsubmit}>
 			<input
 				class="full-width p-0-5"
 				name="text"
@@ -102,7 +109,7 @@
 		</menu>
 
 		<ul>
-			{#each filterTodos(filter) as todo, idx (todo)}
+			{#each filteredTodos as todo, idx (todo)}
 				<li
 					class="flex space-between gap-1 py-0-5"
 					class:gray-6={todo.isDone}
