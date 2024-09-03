@@ -11,61 +11,79 @@
 		length,
 		stringify,
 		parseJSON,
+		filter,
 	} from 'nejquery'
 
+	// An Immutable List
 	const FILTERS = Object.freeze(['All', 'Completed', 'Remaining'])
 
 	// Props
 	const { name = 'OG Todo List', saveAs = null } = $props()
 
-	// Partially applied functions
+	// Helper Functions
+	const newFormDataObj = x => new FormData(x)
+	const getText = obj => obj.get('text')
+
+	// Partially Applied Functions
 	const isDone = pluck('isDone')
 	const keepIsDones = keep(isDone)
 	const rejectIsDones = reject(isDone)
 	const countCompleted = pipe(keepIsDones, length)
 	const countRemaining = pipe(rejectIsDones, length)
 
-	// DOM Fx
-	const resetInput = evt => {
-		evt.target.reset()
-		evt.target.firstChild.focus()
-	}
+	// State Mutation Functions
+	const addTodo = form => {
+		const trimmedText = pipe(newFormDataObj, getText, trim)(form)
 
-	// Event Handlers
-	const onsubmit = evt => {
-		evt.preventDefault()
+		// Partially applied local functions
+		const isNotIncludesTrimmedText = every(({ text }) => text !== trimmedText)
+		const pushNewTodo = push({ text: trimmedText, isDone: false })
 
-		const text = trim(new FormData(evt.target).get('text'))
-		const isNotIncludesText = every(obj => obj.text !== text)
-		const pushNewTodo = push({ text, isDone: false })
-
-		Boolean(text) && isNotIncludesText(todos) && (todos = pushNewTodo(todos))
-
-		resetInput(evt)
+		// Mutate the state (w/ guards)
+		Boolean(trimmedText) &&
+			isNotIncludesTrimmedText(todos) &&
+			(todos = pushNewTodo(todos))
 	}
 
 	const deleteTodo = idx => {
+		// Partially applied local function
 		const rejectTodoWithIndex = reject((_, i) => i === idx)
 
-		if (confirm('Are you sure you want to delete this todo?')) {
-			todos = rejectTodoWithIndex(todos)
-		}
+		// Mutate the state
+		todos = rejectTodoWithIndex(todos)
+	}
+
+	// Event Handlers
+	const handle = {
+		submit: evt => {
+			evt.preventDefault()
+
+			addTodo(evt.target)
+
+			evt.target.reset()
+			evt.target.firstChild.focus()
+		},
+
+		delete: idx => {
+			confirm('Are you sure you want to delete this todo?') && deleteTodo(idx)
+		},
 	}
 
 	// Explicit State
 	let todos = $state([])
-	let filter = $state('All')
+	let filterOption = $state('All')
 
 	// Implicit State
 	const completedCount = $derived(countCompleted(todos))
 	const remainingCount = $derived(countRemaining(todos))
 	const todosCount = $derived(length(todos))
+
 	const filteredTodos = $derived(
 		new Map([
 			['All', todos],
 			['Completed', keepIsDones(todos)],
 			['Remaining', rejectIsDones(todos)],
-		]).get(filter)
+		]).get(filterOption)
 	)
 
 	// Side Effects
@@ -84,7 +102,7 @@
 	<div class="grid place-content-center gap-1-5 p-2 text-center">
 		<div class="text-center h2">{name}</div>
 
-		<form class="flex" {onsubmit}>
+		<form class="flex" onsubmit={handle.submit}>
 			<input
 				class="full-width p-0-5"
 				name="text"
@@ -95,14 +113,14 @@
 		</form>
 
 		<menu class="flex flex-wrap gap-0-2-5">
-			{#each FILTERS as _filter}
+			{#each FILTERS as filter}
 				<li>
 					<button
 						class="bg-lime-4 hover-bg-gray-2 gray-12"
-						class:bg-lime-6={filter === _filter}
-						onclick={() => (filter = _filter)}
+						class:bg-lime-6={filterOption === filter}
+						onclick={() => (filterOption = filter)}
 					>
-						{_filter}
+						{filter}
 					</button>
 				</li>
 			{/each}
@@ -125,16 +143,17 @@
 						type="text"
 						bind:value={todo.text}
 					/>
-					<button class="unset h2 hover-red-4" onclick={() => deleteTodo(idx)}
-						>X</button
+					<button
+						class="unset h2 hover-red-4 focus-outline-1"
+						onclick={() => handle.delete(idx)}>X</button
 					>
 				</li>
 			{/each}
 		</ul>
 
-		{#if filter === 'Completed'}
+		{#if filterOption === 'Completed'}
 			<div class="h4">{completedCount} completed</div>
-		{:else if filter === 'Remaining'}
+		{:else if filterOption === 'Remaining'}
 			<div class="h4">{remainingCount} remaining</div>
 		{:else}
 			<div class="h4">{todosCount} {todosCount === 1 ? 'item' : 'items'}</div>
