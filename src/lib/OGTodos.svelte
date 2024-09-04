@@ -6,12 +6,13 @@
 		reject,
 		every,
 		push,
-		pluck,
-		trim,
 		length,
+		trim,
+		isEq,
+		not,
+		pluck,
 		stringify,
 		parseJSON,
-		filter,
 	} from 'nejquery'
 
 	// An Immutable List
@@ -21,8 +22,8 @@
 	const { name = 'OG Todo List', saveAs = null } = $props()
 
 	// Helper Functions
-	const newFormDataObj = x => new FormData(x)
-	const getText = obj => obj.get('text')
+	const newFormDataObj = formEl => new FormData(formEl)
+	const getFormText = formDataObj => formDataObj.get('text')
 
 	// Partially Applied Functions
 	const isDone = pluck('isDone')
@@ -32,24 +33,22 @@
 	const countRemaining = pipe(rejectIsDones, length)
 
 	// State Mutation Functions
-	const addTodo = form => {
-		const trimmedText = pipe(newFormDataObj, getText, trim)(form)
+	const addTodo = formElement => {
+		const trimmedText = pipe(newFormDataObj, getFormText, trim)(formElement)
 
-		// Partially applied local functions
-		const isNotIncludesTrimmedText = every(({ text }) => text !== trimmedText)
+		const getText = pluck('text')
+		const isNotBlank = not(isEq(''))
+		const isNotTrimmedText = not(isEq(trimmedText))
+		const isTextEqualsTrimmedText = pipe(getText, isNotTrimmedText)
+		const isUniqueText = every(isTextEqualsTrimmedText)
 		const pushNewTodo = push({ text: trimmedText, isDone: false })
 
-		// Mutate the state (w/ guards)
-		Boolean(trimmedText) &&
-			isNotIncludesTrimmedText(todos) &&
-			(todos = pushNewTodo(todos))
+		isNotBlank(trimmedText) && isUniqueText(todos) && (todos = pushNewTodo(todos))
 	}
 
 	const deleteTodo = idx => {
-		// Partially applied local function
 		const rejectTodoWithIndex = reject((_, i) => i === idx)
 
-		// Mutate the state
 		todos = rejectTodoWithIndex(todos)
 	}
 
@@ -89,7 +88,6 @@
 	// Side Effects
 	$effect(() => {
 		const savedTodos = window.localStorage.getItem(saveAs)
-
 		Boolean(savedTodos) && (todos = parseJSON(savedTodos))
 	})
 
@@ -144,7 +142,7 @@
 						bind:value={todo.text}
 					/>
 					<button
-						class="unset h2 hover-red-4 focus-outline-1"
+						class="button-unset h2 hover-red-4"
 						onclick={() => handle.delete(idx)}>X</button
 					>
 				</li>
